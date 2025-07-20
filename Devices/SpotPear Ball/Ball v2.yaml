@@ -1,8 +1,8 @@
 substitutions:
-  name: esphome-web-Code # Change the word Code to whatever you want as long you dont have two devices with the same name or they will overwrite each other.
+  name: esphome-web-code # Change the word code to whatever you want as long ist lowercase and you dont have two devices with the same name or they will overwrite each other.
   friendly_name: CODE    # Change the word Code to whatever you want to be easier to identify the yaml on ESPHome Device Builder and Home Assistant.
 
-  imagemodel: "Model" # (options are: Jarvis,Eyes,Mario,Prime,Steve,Brian) # Change Model for the options. Ex: "Jarvis" "Prime"
+  imagemodel: "Model" # (options are: Jarvis,Eyes,Mario,Prime,Steve,Brian,BumbleBee) # Change Model for the options. Ex: "Jarvis" "Prime"
 
   loading_illustration_file: https://github.com/ricardocosta2/Xiaozhi_Custom_Portuguese/raw/main/images/${imagemodel}/240x240/loading.png
   idle_illustration_file: https://github.com/ricardocosta2/Xiaozhi_Custom_Portuguese/raw/main/images/${imagemodel}/240x240/idle.png
