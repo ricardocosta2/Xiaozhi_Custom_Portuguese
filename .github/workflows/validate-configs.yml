@@ -36,7 +36,7 @@ jobs:
           set -euo pipefail
           shopt -s nullglob
           for yaml in Devices/Modular/*.yaml; do
-            if [[ "$(basename "$yaml")" == "secrets.yaml" ]]; then
+            if [[ "$(basename "$yaml")" == secrets*.yaml ]]; then
               continue
             fi
             echo "=== Validating $yaml ==="
