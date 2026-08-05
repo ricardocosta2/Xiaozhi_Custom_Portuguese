@@ -19,8 +19,16 @@ Devices/
     Ball v1.yaml              # Spotpear Ball v1
     Muma.yaml                 # Spotpear Muma Box
     EchoEar.yaml              # EchoEar v1.2
+    Breadboard_DIY_2.4.yaml   # Breadboard DIY (240x320)
+    esp32-s3-box-3.yaml       # ESP32-S3-BOX-3 (320x240)
+    Freenove-2.8.yaml         # Freenove ESP32S3 2.8" (240x320)
+    Lichuang_s3_cam.yaml      # Lichuang S3 CAM (240x320)
+    Waveshare_Audio_Board.yaml# Waveshare Audio Board (240x240)
+    Xingzhi_Cube_1.54.yaml    # Xiaozhi Cube 1.54 (240x240)
+    "Ball v2 SENDSPIN.yaml"   # Music Assistant (experimental)
     localtest/                # Packages locais (core, display_pages, clocks, HW)
       core.yaml               #   Lógica central do assistente
+      core-sendspin.yaml      #   Variante SENDSPIN
       display_pages.yaml      #   Páginas do ecrã (emoções, timer, ...)
       clocks-*.yaml           #   Estilos de relógio
       HW/*.yaml               #   Definições de hardware por dispositivo
@@ -28,13 +36,17 @@ Devices/
     Ball v2.yaml             # Versão "standalone" antiga (ficheiro único)
 images/
   <Modelo>/240x240/          # Ilustrações do personagem (loading, idle, listening, ...)
+  <Modelo>/240x320/          # Versões para ecrãs 240x320 (Jarvis, Eyes, Mario, Prime)
   Other/240x240/             # Wallpapers para o relógio + imagens de erro
+  Other/240x320/, 320x240/   # Wallpapers para ecrãs verticais/paisagem
 sounds/                      # Sons de startup e notificações
+setup.ps1                    # Script de setup/validação/compilação local (Windows)
 MicroWakeWords/              # Documentação de wake words em português
 HA_Automations/              # Automações prontas (em português)
 ```
 
 **Opções de `imagemodel`:** `Jarvis`, `Eyes`, `Mario`, `Prime`, `Steve`, `Brian`, `BumbleBee`, `Goku`
+**Nota 240x320:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 240x320. Nesses ecrãs, para usar os outros modelos muda `imageheight` para `"240"` (a imagem é esticada).
 
 ---
 
@@ -70,6 +82,26 @@ Se a instalação por Wi-Fi não for bem-sucedida e for sugerida a utilização 
 
 Se mesmo assim ainda não funcionar, tente desligar o dispositivo e ligar sem largar o botão de power — isso fará com que ele fique em modo **BOOT** e já deixe instalar (recomendo não largar o botão durante todo o processo, que leva cerca de 2 a 3 minutos).
 
+### Firmware pré-compilado (CI)
+O workflow **Build Firmware** (`.github/workflows/build-firmware.yml`) compila todos os YAMLs de `Devices/Modular/` e disponibiliza os `.bin` como *artifacts*. Para usar:
+1. Vai a **Actions → Build Firmware → Run workflow** (branch `main`).
+2. No final, descarrega o artifact `firmware-<dispositivo>` de cada job.
+3. Grava via ESPHome Web → **Install** → manual file, ou o instalador Web do dispositivo.
+Gera `*.factory.bin` (flash inicial, partições) e `*.ota.bin` (atualização por Wi-Fi).
+
+### Desenvolvimento local (Windows)
+Usa o script `setup.ps1` na raiz do repositório:
+```powershell
+.\setup.ps1                          # cria venv + instala ESPHome (1ª vez)
+.\setup.ps1 -Validate                # valida todos os configs (esphome config)
+.\setup.ps1 -Compile -Config "Devices/Modular/Ball v2.yaml"
+.\setup.ps1 -UpdateEsphome
+```
+> ⚠️ **MAX_PATH do Windows:** se a compilação falhar com erros de caminho (`.esphome/build/...` muito longo), copia a pasta do repositório para um caminho curto (ex.: `C:\xz`) e corre de lá.
+
+### Music Assistant (SENDSPIN)
+O `Ball v2 SENDSPIN.yaml` é a variante experimental com Music Assistant: album art, multiroom e controlos de reprodução no ecrã (swipes = próxima/anterior faixa e volume). Requer ESPHome 2026.7.0+, o componente experimental `github://pr#16057` e um Music Assistant configurado no HA.
+
 ### Funcionalidades da versão Modular
 - **Relógios no ecrã** quando o dispositivo está idle (7-segment, Flip, Default, Presence, Weather, Analog, Wide, Big, Xiaozhi...).
 - **Wallpapers** de relógio selecionáveis a partir do Home Assistant.
@@ -93,6 +125,12 @@ Versão antiga em ficheiro único, sem bateria/touchscreen/relógios. Mantida ap
 - Spotpear Ball v1
 - Spotpear Muma Box
 - EchoEar v1.2
+- Breadboard DIY 2.4
+- ESP32-S3-BOX-3
+- Freenove ESP32S3 2.8"
+- Lichuang S3 CAM
+- Waveshare Audio Board
+- Xiaozhi Cube 1.54
 
 ---
 
