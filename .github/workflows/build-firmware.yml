@@ -58,12 +58,11 @@ jobs:
       - name: Collect firmware binaries
         run: |
           set -euo pipefail
-          name="${PWD##*/}"
           mkdir -p dist
           base="${matrix_config}"
           base="${base%.yaml}"
-          find .esphome/build -name "firmware.factory.bin" -exec cp {} "dist/${base}.factory.bin" \;
-          find .esphome/build -name "firmware.ota.bin"   -exec cp {} "dist/${base}.ota.bin" \;
+          find Devices/Modular/.esphome/build -name "firmware.factory.bin" -exec cp {} "dist/${base}.factory.bin" \;
+          find Devices/Modular/.esphome/build -name "firmware.ota.bin"   -exec cp {} "dist/${base}.ota.bin" \;
           echo "=== Built files ==="
           ls -la dist
         env:
