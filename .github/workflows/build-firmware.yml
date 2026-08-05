@@ -1,0 +1,81 @@
+name: Build Firmware
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: List modular configs
+        id: set-matrix
+        run: |
+          shopt -s nullglob
+          names=()
+          for yaml in Devices/Modular/*.yaml; do
+            case "$(basename "$yaml")" in
+              secrets*.yaml) continue ;;
+            esac
+            names+=("$(basename "$yaml")")
+          done
+          printf 'matrix=%s\n' "$(printf '%s\n' "${names[@]}" | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ESPHome
+        run: pip install esphome==2026.7.3
+
+      - name: Create temporary secrets for build
+        run: |
+          echo 'wifi_ssid: "ci-wifi"' > "Devices/Modular/secrets.yaml"
+          echo 'wifi_password: "ci-password"' >> "Devices/Modular/secrets.yaml"
+
+      - name: Compile firmware
+        run: esphome compile "Devices/Modular/${{ matrix.config }}"
+
+      - name: Collect firmware binaries
+        run: |
+          set -euo pipefail
+          name="${PWD##*/}"
+          mkdir -p dist
+          base="${matrix_config}"
+          base="${base%.yaml}"
+          find .esphome/build -name "firmware.factory.bin" -exec cp {} "dist/${base}.factory.bin" \;
+          find .esphome/build -name "firmware.ota.bin"   -exec cp {} "dist/${base}.ota.bin" \;
+          echo "=== Built files ==="
+          ls -la dist
+        env:
+          matrix_config: ${{ matrix.config }}
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.config }}
+          path: dist/*.bin
+          if-no-files-found: error
+
+      - name: Cleanup temporary secrets
+        if: always()
+        run: rm -f "Devices/Modular/secrets.yaml"

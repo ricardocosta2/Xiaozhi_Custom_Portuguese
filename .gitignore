@@ -3,3 +3,8 @@ secrets.yaml
 
 # ESPHome cache de packages
 .esphome/
+
+# Venv de desenvolvimento local (setup.ps1)
+.venv/
+__pycache__/
+*.pyc
