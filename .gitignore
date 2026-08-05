@@ -1,0 +1,5 @@
+# ESPHome secrets (nunca commitar!)
+secrets.yaml
+
+# ESPHome cache de packages
+.esphome/
