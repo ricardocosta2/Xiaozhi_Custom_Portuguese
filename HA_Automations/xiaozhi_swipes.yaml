@@ -1,0 +1,70 @@
+# Automações para os dispositivos Xiaozhi (versão Modular v1.12)
+# ---------------------------------------------------------------
+# COMO USAR:
+#  1. Substitui "ESPHOME_WEB_CODIGO" pelo nome do teu dispositivo (o valor de `name:` no YAML).
+#  2. Copia o conteúdo para Home Assistant > Definições > Automações e cenas > Criar automação >
+#     Menu (... no canto superior direito) > "Editar em YAML".
+#  3. (Alternativa) cola em configuration.yaml > automation: e recarrega as automações.
+#
+# TODAS as entidades usadas são criadas pelo dispositivo no ESPHome.
+# Se não quiseres usar swipes locais, desliga o switch "Handle swipes on device" no dispositivo.
+
+alias: Xiaozhi Swipes - Trocar relógio e wallpaper
+description: >-
+  Usa os sensores de swipe do Xiaozhi para trocar o estilo do relógio (esquerda/direita),
+  trocar o wallpaper (cima) e mostrar a bateria (baixo).
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.esphome_web_codigo_swipe_left
+    to: "on"
+    id: esquerda
+  - trigger: state
+    entity_id: binary_sensor.esphome_web_codigo_swipe_right
+    to: "on"
+    id: direita
+  - trigger: state
+    entity_id: binary_sensor.esphome_web_codigo_swipe_up
+    to: "on"
+    id: cima
+  - trigger: state
+    entity_id: binary_sensor.esphome_web_codigo_swipe_down
+    to: "on"
+    id: baixo
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: [cima]
+        sequence:
+          - action: select.select_next
+            target:
+              entity_id: select.esphome_web_codigo_clock_wallpaper_online
+            data:
+              cycle: true
+      - conditions:
+          - condition: trigger
+            id: [baixo]
+        sequence:
+          - action: switch.toggle
+            target:
+              entity_id: switch.esphome_web_codigo_show_battery_status
+      - conditions:
+          - condition: trigger
+            id: [esquerda]
+        sequence:
+          - action: select.select_next
+            target:
+              entity_id: select.esphome_web_codigo_clock_style
+            data:
+              cycle: true
+      - conditions:
+          - condition: trigger
+            id: [direita]
+        sequence:
+          - action: select.select_previous
+            target:
+              entity_id: select.esphome_web_codigo_clock_style
+            data:
+              cycle: true
+mode: single

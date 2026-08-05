@@ -1,0 +1,91 @@
+select:
+  - platform: template
+    entity_category: config
+    name: "Clock Style"
+    id: clock_style
+    icon: "mdi:clock-digital"
+    optimistic: true
+    restore_value: true
+    options:
+      - Small
+    initial_option: Small
+    on_value:
+      - if:
+          condition:
+            lambda: return id(show_clock);
+          then:
+            - script.execute: show_clock_page
+
+  - platform: template
+    entity_category: config
+    name: "Clock Wallpaper (Online)"
+    id: clock_wallpaper_image
+    icon: "mdi:image"
+    optimistic: true
+    restore_value: true
+    options:
+      - clock
+    initial_option: ${clock_background_image}
+    on_value:
+      - online_image.set_url:
+          id: clock_background
+          url: !lambda |-
+            std::string base = "${imagepath}/Other/"
+                               "${screenwidth}x${screenheight}/";
+            return base + std::string(x) + ".png";
+          update: true
+      - component.update: main_display
+
+script:
+  - id: show_clock_page
+    then:
+      - lambda: |-
+          const std::string sel = id(clock_style).current_option();
+          if (sel == "Small") {
+            id(main_display).show_page(small_clock);
+          } else {
+            id(main_display).show_page(small_clock);
+          }
+          id(main_display).update();
+
+  - id: swipe_left_action   # next clock style
+    then:
+      - lambda: |-
+          static const char* const opts[] = {
+            "Small"
+          };
+          const int N = sizeof(opts)/sizeof(opts[0]);
+          std::string cur = id(clock_style).current_option();
+          int idx = 0;
+          for (int i = 0; i < N; i++) if (cur == opts[i]) { idx = i; break; }
+          int next = (idx + 1) % N;
+          id(clock_style).publish_state(opts[next]);
+
+  - id: swipe_right_action  # previous clock style
+    then:
+      - lambda: |-
+          static const char* const opts[] = {
+            "Small"
+          };
+          const int N = sizeof(opts)/sizeof(opts[0]);
+          std::string cur = id(clock_style).current_option();
+          int idx = 0;
+          for (int i = 0; i < N; i++) if (cur == opts[i]) { idx = i; break; }
+          int prev = (idx - 1 + N) % N;
+          id(clock_style).publish_state(opts[prev]);
+
+  - id: swipe_up_action     # next wallpaper (cycle)
+    then:
+      - lambda: |-
+          static const char* const opts[] = { "clock" };
+          const int N = sizeof(opts)/sizeof(opts[0]);
+          std::string cur = id(clock_wallpaper_image).current_option();
+          int idx = 0;
+          for (int i = 0; i < N; i++) if (cur == opts[i]) { idx = i; break; }
+          int next = (idx + 1) % N;
+          id(clock_wallpaper_image).publish_state(opts[next]);
+
+  - id: swipe_down_action   # toggle battery widget
+    then:
+      - switch.toggle: show_battery_status
+      - component.update: main_display

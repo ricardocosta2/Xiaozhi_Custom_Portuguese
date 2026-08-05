@@ -1,0 +1,47 @@
+# Mostrar o que é dito e a resposta do assistente no dashboard do Home Assistant
+# ---------------------------------------------------------------
+# ANTES DE USAR:
+#  1. Substitui "ESPHOME_WEB_CODIGO" pelo nome do teu dispositivo (valor de `name:` no YAML).
+#  2. Cria um "helper" de texto: Definições > Dispositivos e serviços > Helpers > Criar helper
+#     > Caixa de texto, com o nome "airesponse" (entity_id: input_text.airesponse).
+#  3. Cola esta automação (Editar em YAML) e adiciona o cartão markdown abaixo ao dashboard.
+
+alias: Xiaozhi - Mostrar pedido e resposta no dashboard
+description: ""
+triggers:
+  - trigger: state
+    id: pedido
+    entity_id: sensor.esphome_web_codigo_text_request
+  - trigger: state
+    id: resposta
+    entity_id: sensor.esphome_web_codigo_text_response
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: pedido
+          - condition: template
+            value_template: "{{ trigger.to_state.state != '...' }}"
+        sequence:
+          - action: input_text.set_value
+            target:
+              entity_id: input_text.airesponse
+            data:
+              value: "{{ 'Tu: ' ~ trigger.to_state.state }}"
+      - conditions:
+          - condition: trigger
+            id: resposta
+          - condition: template
+            value_template: "{{ trigger.to_state.state != '...' }}"
+        sequence:
+          - action: input_text.set_value
+            target:
+              entity_id: input_text.airesponse
+            data:
+              value: "{{ 'IA: ' ~ trigger.to_state.state }}"
+mode: single
+
+# ===== Cartão markdown para adicionar ao dashboard =====
+# type: markdown
+# content: "# {{ states('input_text.airesponse') }}"
