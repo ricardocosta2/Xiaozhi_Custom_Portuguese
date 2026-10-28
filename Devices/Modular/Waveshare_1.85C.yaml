@@ -1,0 +1,102 @@
+substitutions:
+  name: esphome-web-code # Change the word code to whatever you want as long ist lowercase and you dont have two devices with the same name or they will overwrite each other.
+  friendly_name: CODE    # Change the word Code to whatever you want to be easier to identify the yaml on ESPHome Device Builder and Home Assistant.
+
+## Modular version v1.12 (packages LOCAIS - copiados do RealDeco/xiaozhi-esphome)
+## Vantagens: imune a alterações do RealDeco no main; podes personalizar core.yaml à vontade.
+## Para atualizar para uma nova versão, substitui os ficheiros em localtest/ pelos novos
+## (https://github.com/RealDeco/xiaozhi-esphome/tree/main/devices/Under_Development/Modular).
+## Requer ESPHome 2026.7.0 ou superior.
+
+## ESP32-S3-Touch-LCD-1.85C (ecrã 360x360)
+
+## SETTINGS ######################################################################################################################################
+
+  imagewidth:  "360"
+  imageheight: "360"
+
+  screenwidth:  "360"
+  screenheight: "360"
+  rotate_display: "180"
+
+  startup_sound: "Home_Connected" # (options are: available, Home_Connected, Home_Connected_Male, Computer_Ready)
+  clock_background_image: "clock" # (options are: clock, hacker, mission, ha-girl, redmarble, Rolex, starrysky, waves, tron, chip, waterdrops, neonwaves)
+  imagemodel: "Jarvis" # options (360x360 nativo): Jarvis, Eyes, Mario, Prime
+#  NOTA: só Jarvis, Eyes, Mario e Prime têm imagens nativas 360x360. Para os outros modelos
+#  (Steve, Brian, BumbleBee, Goku) terias de usar outra resolução/dispositivo.
+
+# USE ONLINE OR LOCAL MODEL AND WALLPAPER IMAGES, IMAGES SHOULD BE PLACED IN: homeassistant/www/images/
+  imagepath: "https://github.com/ricardocosta2/Xiaozhi_Custom_Portuguese/raw/main/images"
+#  imagepath: "http://homeassistant.local:8123/local/images/"
+
+## DISPLAY #######################################################################################################################################
+
+  display_model: "JC3636W518"
+
+## PRESENCE / MOTION SENSORS ########## Muda para as entidades da TUA casa. ######################################################################
+## (Só são usados pelo relógio estilo "Presence". Se não quiseres usar, deixa assim.)
+
+  sensor1_entity: "binary_sensor.presence_room_1"
+  light1_entity: "light.room_1_lights"
+  sensor1_label: "Room 1"
+
+  sensor2_entity: "binary_sensor.presence_room_2"
+  light2_entity: "light.room_2_lights"
+  sensor2_label: "Room 2"
+
+  sensor3_entity: "binary_sensor.presence_room_3"
+  light3_entity: "light.room_3_lights"
+  sensor3_label: "Room 3"
+
+  sensor4_entity: "binary_sensor.presence_room_4"
+  light4_entity: "light.room_4_lights"
+  sensor4_label: "Room 4"
+
+  sensor5_entity: "binary_sensor.presence_room_5"
+  light5_entity: "light.room_5_lights"
+  sensor5_label: "Room 5"
+
+  weather_entity: "weather.forecast_home"
+
+##################################################################################################################################################
+
+  font_glyphsets: "GF_Latin_Core"
+  font_family: Figtree
+
+esp32:
+  variant: esp32s3
+  flash_size: 16MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    sdkconfig_options:
+      CONFIG_ESP32S3_DEFAULT_CPU_FREQ_240: "y"
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+### USE LOCAL MODULES (localtest) ################################################################################################################
+
+packages:
+  core: !include localtest/core.yaml
+  hw:   !include localtest/HW/waveshare-1.85c.hw.yaml
+
+#logger:
+#  level: DEBUG
+
+## ENABLE / DISABLE WAKE WORDS ## IF LOW ON MEMORY, USE LESS WAKE WORDS ##########################################################################
+
+micro_wake_word:
+  id: mww
+  models:
+    - okay_nabu
+    - hey_jarvis
+    - alexa
+    - hey_mycroft
+#    - model: https://raw.githubusercontent.com/RealDeco/xiaozhi-esphome/refs/heads/main/MicroWakeWords/models/v2/hey_sarah.json
+#    - model: https://raw.githubusercontent.com/JohnnyPrimus/Custom_V2_MicroWakeWords/refs/heads/main/models/computer/computer.json
+
+##################################################################################################################################################

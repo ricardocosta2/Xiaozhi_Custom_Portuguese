@@ -22,6 +22,8 @@ Devices/
     Freenove-2.8.yaml         # Freenove ESP32S3 2.8" (240x320)
     Lichuang_s3_cam.yaml      # Lichuang S3 CAM (240x320)
     Waveshare_Audio_Board.yaml# Waveshare Audio Board (240x240)
+    Waveshare_1.85C.yaml      # Waveshare 1.85C (360x360)
+    Guition_Taichi_Pi_V1.yaml # Guition Taichi Pi V1 (360x360)
     Xingzhi_Cube_1.54.yaml    # Xiaozhi Cube 1.54 (240x240)
     "Ball v2 SENDSPIN.yaml"   # Music Assistant (experimental)
     localtest/                # Packages locais (core, display_pages, clocks, HW)
@@ -35,6 +37,7 @@ Devices/
 images/
   <Modelo>/240x240/          # Ilustrações do personagem (loading, idle, listening, ...)
   <Modelo>/240x320/          # Versões para ecrãs 240x320 (Jarvis, Eyes, Mario, Prime)
+  <Modelo>/360x360/          # Versões para ecrãs 360x360 (Jarvis, Eyes, Mario, Prime)
   Other/240x240/             # Wallpapers para o relógio + imagens de erro
   Other/240x320/, 320x240/   # Wallpapers para ecrãs verticais/paisagem
 sounds/                      # Sons de startup e notificações
@@ -45,6 +48,7 @@ HA_Automations/              # Automações prontas (em português)
 
 **Opções de `imagemodel`:** `Jarvis`, `Eyes`, `Mario`, `Prime`, `Steve`, `Brian`, `BumbleBee`, `Goku`
 **Nota 240x320:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 240x320. Nesses ecrãs, para usar os outros modelos muda `imageheight` para `"240"` (a imagem é esticada).
+**Nota 360x360:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 360x360 (Waveshare 1.85C e Guition Taichi Pi V1). Para os outros modelos, usa um dispositivo de 240x240.
 
 ---
 
@@ -137,6 +141,8 @@ Versão antiga em ficheiro único, sem bateria/touchscreen/relógios. Mantida ap
 - Freenove ESP32S3 2.8"
 - Lichuang S3 CAM
 - Waveshare Audio Board
+- Waveshare 1.85C
+- Guition Taichi Pi V1
 - Xiaozhi Cube 1.54
 
 ---
