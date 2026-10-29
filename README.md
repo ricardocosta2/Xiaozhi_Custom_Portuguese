@@ -26,6 +26,7 @@ Devices/
     Waveshare_Audio_Board.yaml# Waveshare Audio Board (240x240)
     Waveshare_1.85C.yaml      # Waveshare 1.85C / 1.85C-BOX (360x360)
     Waveshare_1.85C_v1-2.yaml # Waveshare 1.85C v2 / 1.85C-BOX v2 (360x360)
+    Waveshare_1.75.yaml       # Waveshare AMOLED 1.75 (466x466)
     Guition_Taichi_Pi_V1.yaml # Guition Taichi Pi V1 (360x360)
     Guition_Taichi_Pi_V2.yaml # Guition Taichi Pi V2 (360x360, micro PDM)
     Xingzhi_Cube_1.54.yaml    # Xiaozhi Cube 1.54 (240x240)
@@ -44,6 +45,7 @@ images/
   <Modelo>/240x320/          # Versões para ecrãs 240x320 (Jarvis, Eyes, Mario, Prime)
   <Modelo>/360x360/          # Versões para ecrãs 360x360 (Jarvis, Eyes, Mario, Prime)
   <Modelo>/284x240/          # Versões para ecrãs 284x240 (Jarvis, Eyes, Mario, Prime)
+  <Modelo>/466x466/          # Versões para ecrãs 466x466 (Jarvis, Eyes, Mario, Prime)
   Other/240x240/             # Wallpapers para o relógio + imagens de erro
   Other/240x320/, 320x240/   # Wallpapers para ecrãs verticais/paisagem
 sounds/                      # Sons de startup e notificações
@@ -56,6 +58,7 @@ HA_Automations/              # Automações prontas (em português)
 **Nota 240x320:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 240x320. Nesses ecrãs, para usar os outros modelos muda `imageheight` para `"240"` (a imagem é esticada).
 **Nota 360x360:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 360x360 (Waveshare 1.85C / 1.85C v2 e Guition Taichi Pi V1/V2). Para os outros modelos, usa um dispositivo de 240x240.
 **Nota 284x240:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 284x240 (Xingzhi 1.83 2mic), redimensionadas a partir das fontes 480x480.
+**Nota 466x466:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 466x466 (Waveshare AMOLED 1.75), redimensionadas a partir das fontes 480x480.
 
 ---
 
@@ -141,6 +144,7 @@ Versão antiga em ficheiro único, sem bateria/touchscreen/relógios. Mantida ap
 - Waveshare Audio Board
 - Waveshare 1.85C
 - Waveshare 1.85C v2
+- Waveshare AMOLED 1.75
 - Guition Taichi Pi V1
 - Guition Taichi Pi V2
 - Xiaozhi Cube 1.54
