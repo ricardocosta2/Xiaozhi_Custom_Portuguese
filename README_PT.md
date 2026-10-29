@@ -27,6 +27,7 @@ Devices/
     Waveshare_1.85C.yaml      # Waveshare 1.85C / 1.85C-BOX (360x360)
     Waveshare_1.85C_v1-2.yaml # Waveshare 1.85C v2 / 1.85C-BOX v2 (360x360)
     Waveshare_1.75.yaml       # Waveshare AMOLED 1.75 (466x466)
+    Waveshare_3.5.yaml        # Waveshare 3.5 (320x480)
     Guition_Taichi_Pi_V1.yaml # Guition Taichi Pi V1 (360x360)
     Guition_Taichi_Pi_V2.yaml # Guition Taichi Pi V2 (360x360, micro PDM)
     Xingzhi_Cube_1.54.yaml    # Xiaozhi Cube 1.54 (240x240)
@@ -46,9 +47,10 @@ images/
   <Modelo>/360x360/          # Versões para ecrãs 360x360 (Jarvis, Eyes, Mario, Prime)
   <Modelo>/284x240/          # Versões para ecrãs 284x240 (Jarvis, Eyes, Mario, Prime)
   <Modelo>/466x466/          # Versões para ecrãs 466x466 (Jarvis, Eyes, Mario, Prime)
+  <Modelo>/320x480/          # Versões para ecrãs 320x480 (Jarvis, Eyes, Mario, Prime)
   <Modelo>/128x64/           # Versões para OLED 128x64 (apenas Eyes e Eyes2)
-  Other/240x240/             # Wallpapers para o relógio + imagens de erro
-  Other/240x320/, 320x240/   # Wallpapers para ecrãs verticais/paisagem
+  Other/<resolução>/         # Wallpapers do relógio (240x240, 240x320, 284x240, 320x240, 320x480, 360x360, 466x466, 128x64)
+  Other/error-no-*.png       # Imagens de erro (sem HA / sem WiFi)
 sounds/                      # Sons de startup e notificações
 setup.ps1                    # Script de setup/validação/compilação local (Windows)
 MicroWakeWords/              # Documentação de wake words em português
@@ -60,6 +62,7 @@ HA_Automations/              # Automações prontas (em português)
 **Nota 360x360:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 360x360 (Waveshare 1.85C / 1.85C v2 e Guition Taichi Pi V1/V2). Para os outros modelos, usa um dispositivo de 240x240.
 **Nota 284x240:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 284x240 (Xingzhi 1.83 2mic), redimensionadas a partir das fontes 480x480.
 **Nota 466x466:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 466x466 (Waveshare AMOLED 1.75), redimensionadas a partir das fontes 480x480.
+**Nota 320x480:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 320x480 (Waveshare 3.5), recortadas ao centro a partir das fontes 480x480.
 **Nota 128x64:** no OLED de 128x64 (MiniSpeaker096 e Breadboard Mini) só existem `Eyes` e `Eyes2`; o relógio usa o estilo "Small".
 
 ### Resumo por dispositivo
@@ -71,6 +74,7 @@ HA_Automations/              # Automações prontas (em português)
 | Waveshare 1.85C, Waveshare 1.85C v2, Guition Taichi Pi V1/V2 | 360x360 | Jarvis, Eyes, Mario, Prime |
 | Xingzhi Cube 1.83 2mic | 284x240 | Jarvis, Eyes, Mario, Prime |
 | Waveshare AMOLED 1.75 | 466x466 | Jarvis, Eyes, Mario, Prime |
+| Waveshare 3.5 | 320x480 | Jarvis, Eyes, Mario, Prime |
 | MiniSpeaker096, Breadboard Mini | 128x64 (OLED) | Eyes, Eyes2 |
 
 ---
@@ -169,6 +173,7 @@ Versão antiga em ficheiro único, sem bateria/touchscreen/relógios. Mantida ap
 - Waveshare 1.85C
 - Waveshare 1.85C v2
 - Waveshare AMOLED 1.75
+- Waveshare 3.5
 - Guition Taichi Pi V1
 - Guition Taichi Pi V2
 - Xiaozhi Cube 1.54
