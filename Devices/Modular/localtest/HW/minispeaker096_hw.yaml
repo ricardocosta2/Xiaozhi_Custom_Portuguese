@@ -1,0 +1,185 @@
+﻿# minispeaker096 (MiniSpeaker 'little purple', ESP32-S3 + SH1106 128x64)
+
+# --- CLOCKS PACKAGE -----------------------------------------------------------
+packages:
+  clocks: !include ../clocks-small.yaml
+
+# --- EXTRAS -------------------------------------------------------------------
+binary_sensor:
+  - platform: gpio
+    pin: 
+      number: GPIO39
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Volume Down"
+    id: volume_down
+    filters:
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+    on_press:
+      - media_player.volume_down: external_media_player
+    on_release:
+      - logger.log: "Button was released"
+
+  - platform: gpio
+    pin: 
+      number: GPIO40
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Volume Up"
+    id: volume_up
+    filters:
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+    on_press:
+      - media_player.volume_up: external_media_player
+    on_release:
+      - logger.log: "Button was released"
+
+# --- BUSES / PERIPHERALS ------------------------------------------------------
+i2c:
+  sda: 41
+  scl: 42
+  frequency: 800kHz
+
+i2s_audio:
+  - id: i2s_mic
+    i2s_lrclk_pin: GPIO4
+    i2s_bclk_pin: GPIO5
+  - id: i2s_audio_bus
+    i2s_lrclk_pin: GPIO16
+    i2s_bclk_pin: GPIO15
+
+# --- AUDIO DEVICES ------------------------------------------------------------
+microphone:
+  - platform: i2s_audio
+    id: box_mic
+    i2s_audio_id: i2s_mic
+    i2s_din_pin: GPIO6
+    adc_type: external
+    channel: left
+    pdm: false
+    sample_rate: 16000
+    bits_per_sample: 16bit
+
+speaker:
+  - platform: i2s_audio
+    id: box_speaker
+    i2s_audio_id: i2s_audio_bus
+    i2s_dout_pin: GPIO7
+    dac_type: external
+    sample_rate: 16000
+    channel: left
+
+media_player:
+  - platform: speaker
+    name: None
+    id: external_media_player
+    # HW pack must provide "speaker: box_speaker"
+    announcement_pipeline:
+      speaker: box_speaker
+      format: WAV
+      sample_rate: 16000
+      num_channels: 1
+    buffer_size: 250000
+    files:
+      - id: timer_finished_sound
+        file: https://github.com/ricardocosta2/Xiaozhi_Custom_Portuguese/raw/main/sounds/timer_finished.flac
+      - id: wake_word_triggered_sound
+        file: https://github.com/ricardocosta2/Xiaozhi_Custom_Portuguese/raw/main/sounds/wake_word_triggered.flac
+      - id: ready_sound
+        file: ${startup_sound_file}
+    on_announcement:
+      - if:
+          condition:
+            - microphone.is_capturing:
+          then:
+            - script.execute: stop_wake_word
+            - if:
+                condition:
+                  - lambda: return id(wake_word_engine_location).current_option() == "In Home Assistant";
+                then:
+                  - wait_until:
+                      condition:
+                        - not:
+                            voice_assistant.is_running:
+      - if:
+          condition:
+            lambda: 'return id(playing_internal_sound);'
+          then:
+            - lambda: 'id(playing_internal_sound) = false;'
+          else:
+            - script.execute: reset_screensaver
+            - display.page.show: now_playing_page
+            - component.update: main_display
+    on_idle:
+      - if:
+          condition:
+            not:
+              voice_assistant.is_running:
+          then:
+            - script.execute: start_wake_word
+            - script.execute: set_idle_or_mute_phase
+            - script.execute: draw_display
+
+# --- LIGHT --------------------------------------------------------------------
+light:
+  - platform: esp32_rmt_led_strip
+    id: led
+    name: none
+    disabled_by_default: false
+    entity_category: config
+    pin: GPIO48
+    default_transition_length: 0s
+    chipset: WS2812
+    num_leds: 1
+    rgb_order: grb
+    effects:
+      - pulse:
+          name: "Slow Pulse"
+          transition_length: 250ms
+          update_interval: 250ms
+          min_brightness: 50%
+          max_brightness: 100%
+      - pulse:
+          name: "Fast Pulse"
+          transition_length: 100ms
+          update_interval: 100ms
+          min_brightness: 50%
+          max_brightness: 100%
+
+# --- BATTERY ADC --------------------------------------------------------------
+sensor:
+  - platform: adc
+    pin: GPIO1
+    name: "Battery Voltage"
+    id: battery_voltage
+    attenuation: 12db
+    accuracy_decimals: 2
+    update_interval: 10s
+    unit_of_measurement: "V"
+    icon: mdi:battery-medium
+    filters:
+      - multiply: 2.0
+      - median:
+          window_size: 7
+          send_every: 7
+          send_first_at: 1
+      - throttle: 1min
+    on_value:
+      then:
+        - sensor.template.publish:
+            id: battery_percentage
+            state: !lambda 'return x;'
+
+# --- DISPLAY DRIVER (I2C SH1106 128x64) ---------------------------------------
+display:
+  - platform: ssd1306_i2c
+    id: main_display
+    model: "SH1106 128x64"
+    address: 0x3C
+    update_interval: never
+    contrast: 60%
+    auto_clear_enabled: true
+    rotation: ${rotate_display}
+    pages: !include ../display_pages.yaml

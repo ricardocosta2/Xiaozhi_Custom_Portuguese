@@ -17,6 +17,7 @@ Devices/
     Ball v1.yaml              # Spotpear Ball v1
     Muma.yaml                 # Spotpear Muma Box
     EchoEar.yaml              # EchoEar v1.2
+    MiniSpeaker096.yaml       # MiniSpeaker096 (OLED 128x64)
     Breadboard_DIY_2.4.yaml   # Breadboard DIY (240x320)
     esp32-s3-box-3.yaml       # ESP32-S3-BOX-3 (320x240)
     Freenove-2.8.yaml         # Freenove ESP32S3 2.8" (240x320)
@@ -44,6 +45,7 @@ images/
   <Modelo>/360x360/          # Versões para ecrãs 360x360 (Jarvis, Eyes, Mario, Prime)
   <Modelo>/284x240/          # Versões para ecrãs 284x240 (Jarvis, Eyes, Mario, Prime)
   <Modelo>/466x466/          # Versões para ecrãs 466x466 (Jarvis, Eyes, Mario, Prime)
+  <Modelo>/128x64/           # Versões para OLED 128x64 (apenas Eyes e Eyes2)
   Other/240x240/             # Wallpapers para o relógio + imagens de erro
   Other/240x320/, 320x240/   # Wallpapers para ecrãs verticais/paisagem
 sounds/                      # Sons de startup e notificações
@@ -57,6 +59,7 @@ HA_Automations/              # Automações prontas (em português)
 **Nota 360x360:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 360x360 (Waveshare 1.85C / 1.85C v2 e Guition Taichi Pi V1/V2). Para os outros modelos, usa um dispositivo de 240x240.
 **Nota 284x240:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 284x240 (Xingzhi 1.83 2mic), redimensionadas a partir das fontes 480x480.
 **Nota 466x466:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 466x466 (Waveshare AMOLED 1.75), redimensionadas a partir das fontes 480x480.
+**Nota 128x64:** no OLED de 128x64 (MiniSpeaker096) só existem `Eyes` e `Eyes2`; o relógio usa o estilo "Small".
 
 ---
 
@@ -144,6 +147,7 @@ Versão antiga em ficheiro único, sem bateria/touchscreen/relógios. Mantida ap
 - Spotpear Ball v1
 - Spotpear Muma Box
 - EchoEar v1.2
+- MiniSpeaker096 (OLED 128x64)
 - Breadboard DIY 2.4
 - ESP32-S3-BOX-3
 - Freenove ESP32S3 2.8"

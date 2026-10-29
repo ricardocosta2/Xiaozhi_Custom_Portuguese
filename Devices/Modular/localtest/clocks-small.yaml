@@ -1,4 +1,4 @@
-select:
+﻿select:
   - platform: template
     entity_category: config
     name: "Clock Style"
