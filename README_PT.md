@@ -19,6 +19,7 @@ Devices/
     EchoEar.yaml              # EchoEar v1.2
     MiniSpeaker096.yaml       # MiniSpeaker096 (OLED 128x64)
     Breadboard_DIY_2.4.yaml   # Breadboard DIY (240x320)
+    Breadboard_Mini.yaml      # Breadboard Mini (OLED 128x64)
     esp32-s3-box-3.yaml       # ESP32-S3-BOX-3 (320x240)
     Freenove-2.8.yaml         # Freenove ESP32S3 2.8" (240x320)
     Lichuang_s3_cam.yaml      # Lichuang S3 CAM (240x320)
@@ -59,7 +60,7 @@ HA_Automations/              # Automações prontas (em português)
 **Nota 360x360:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 360x360 (Waveshare 1.85C / 1.85C v2 e Guition Taichi Pi V1/V2). Para os outros modelos, usa um dispositivo de 240x240.
 **Nota 284x240:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 284x240 (Xingzhi 1.83 2mic), redimensionadas a partir das fontes 480x480.
 **Nota 466x466:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 466x466 (Waveshare AMOLED 1.75), redimensionadas a partir das fontes 480x480.
-**Nota 128x64:** no OLED de 128x64 (MiniSpeaker096) só existem `Eyes` e `Eyes2`; o relógio usa o estilo "Small".
+**Nota 128x64:** no OLED de 128x64 (MiniSpeaker096 e Breadboard Mini) só existem `Eyes` e `Eyes2`; o relógio usa o estilo "Small".
 
 ---
 
@@ -148,6 +149,7 @@ Versão antiga em ficheiro único, sem bateria/touchscreen/relógios. Mantida ap
 - Spotpear Muma Box
 - EchoEar v1.2
 - MiniSpeaker096 (OLED 128x64)
+- Breadboard Mini (OLED 128x64)
 - Breadboard DIY 2.4
 - ESP32-S3-BOX-3
 - Freenove ESP32S3 2.8"
