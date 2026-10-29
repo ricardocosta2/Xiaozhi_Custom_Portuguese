@@ -179,6 +179,8 @@ Versão antiga em ficheiro único, sem bateria/touchscreen/relógios. Mantida ap
 - Xiaozhi Cube 1.54
 - Xingzhi Cube 1.83 2mic
 
+**Não incluídos (requerem arte com proporção específica):** Guition P4 4.3 (480x800), Guition P4 4.3 horizontal (800x480), Guition P4 7.0 (1024x600), Waveshare 3.49 Blue (640x172) e Waveshare 40-P4 86 eth (720x720, só o modelo Prime tem arte nativa). Nesses ecrãs, os modelos sem arte dedicada ficam esticados/desfocados.
+
 ---
 
 ## 🛠️ Troubleshooting
