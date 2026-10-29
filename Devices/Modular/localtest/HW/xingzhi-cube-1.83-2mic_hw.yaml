@@ -1,0 +1,230 @@
+# xingzhi cube 1.83 2mic (ESP32-S3 + ST7701S 284x240)
+
+# --- CLOCKS PACKAGE -----------------------------------------------------------
+packages:
+  clocks: !include ../clocks-standard.yaml
+
+# --- BUTTONS ------------------------------------------------------------------
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO39
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Left Button"
+    id: xingzhi_left_button
+    filters:
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+  - platform: gpio
+    pin:
+      number: GPIO40
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Right Button"
+    id: xingzhi_right_button
+    filters:
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+# --- BUSES / PERIPHERALS ------------------------------------------------------
+spi:
+  - id: spi_bus
+    clk_pin: GPIO9
+    mosi_pin: GPIO10
+
+i2c:
+  - id: bus_a
+    sda: GPIO12
+    scl: GPIO11
+    scan: true
+
+i2s_audio:
+  - id: i2s_audio_bus
+    i2s_lrclk_pin: GPIO16
+    i2s_bclk_pin: GPIO15
+    i2s_mclk_pin: GPIO5
+
+# --- AUDIO DEVICES ------------------------------------------------------------
+audio_adc:
+  - platform: es7210
+    i2c_id: bus_a
+    id: es7210_adc
+    bits_per_sample: 16bit
+    sample_rate: 16000
+
+audio_dac:
+  - platform: es8311
+    i2c_id: bus_a
+    id: es8311_dac
+    bits_per_sample: 16bit
+    sample_rate: 48000
+
+microphone:
+  - platform: i2s_audio
+    id: box_mic
+    i2s_audio_id: i2s_audio_bus
+    i2s_din_pin: GPIO7
+    adc_type: external
+    channel: left
+    pdm: false
+    sample_rate: 16000
+    bits_per_sample: 16bit
+
+speaker:
+  - platform: i2s_audio
+    id: box_speaker
+    i2s_audio_id: i2s_audio_bus
+    i2s_dout_pin: GPIO6
+    dac_type: external
+    audio_dac: es8311_dac
+    sample_rate: 48000
+    channel: mono
+
+media_player:
+  - platform: speaker
+    name: None
+    id: external_media_player
+    announcement_pipeline:
+      speaker: box_speaker
+      format: FLAC
+      sample_rate: 48000
+      num_channels: 1
+    buffer_size: 250000
+    files:
+      - id: timer_finished_sound
+        file: https://github.com/ricardocosta2/Xiaozhi_Custom_Portuguese/raw/main/sounds/timer_finished.flac
+      - id: wake_word_triggered_sound
+        file: https://github.com/ricardocosta2/Xiaozhi_Custom_Portuguese/raw/main/sounds/wake_word_triggered.flac
+      - id: ready_sound
+        file: ${startup_sound_file}
+    on_announcement:
+      - if:
+          condition:
+            - microphone.is_capturing:
+          then:
+            - script.execute: stop_wake_word
+            - if:
+                condition:
+                  - lambda: return id(wake_word_engine_location).current_option() == "In Home Assistant";
+                then:
+                  - wait_until:
+                      condition:
+                        - not:
+                            voice_assistant.is_running:
+      - if:
+          condition:
+            lambda: 'return id(playing_internal_sound);'
+          then:
+            - lambda: 'id(playing_internal_sound) = false;'
+          else:
+            - script.execute: reset_screensaver
+            - display.page.show: now_playing_page
+            - component.update: main_display
+    on_idle:
+      - if:
+          condition:
+            not:
+              voice_assistant.is_running:
+          then:
+            - script.execute: start_wake_word
+            - script.execute: set_idle_or_mute_phase
+            - script.execute: draw_display
+
+# --- BACKLIGHT & STATUS LED ---------------------------------------------------
+output:
+  - platform: ledc
+    id: backlight_output
+    pin: GPIO13
+
+light:
+  - platform: monochromatic
+    id: Sled
+    name: Screen
+    icon: "mdi:television"
+    entity_category: config
+    output: backlight_output
+    restore_mode: ALWAYS_ON
+    default_transition_length: 250ms
+
+  - platform: esp32_rmt_led_strip
+    id: led
+    name: none
+    disabled_by_default: false
+    entity_category: config
+    pin: GPIO48
+    default_transition_length: 0s
+    chipset: WS2812
+    num_leds: 1
+    rgb_order: grb
+    effects:
+      - pulse:
+          name: "Slow Pulse"
+          transition_length: 250ms
+          update_interval: 250ms
+          min_brightness: 50%
+          max_brightness: 100%
+      - pulse:
+          name: "Fast Pulse"
+          transition_length: 100ms
+          update_interval: 100ms
+          min_brightness: 50%
+          max_brightness: 100%
+
+# --- DISPLAY DRIVER (mipi_spi custom 284x240) ---------------------------------
+display:
+  - platform: mipi_spi
+    id: main_display
+    model: CUSTOM
+    cs_pin: GPIO14
+    dc_pin: GPIO8
+    reset_pin: GPIO18
+    data_rate: 40MHz
+    spi_mode: MODE0
+    color_order: bgr
+    invert_colors: true
+    dimensions:
+      width: 284
+      height: 240
+      offset_width: 36
+      offset_height: 0
+    transform:
+      swap_xy: true
+      mirror_x: false
+      mirror_y: true
+    update_interval: never
+    init_sequence:
+      - [0xFD, 0x06, 0x08]
+      - [0x61, 0x07, 0x04]
+      - [0x62, 0x00, 0x44, 0x45]
+      - [0x63, 0x41, 0x07, 0x12, 0x12]
+      - [0x64, 0x37]
+      - [0x65, 0x09, 0x10, 0x21]
+      - [0x66, 0x09, 0x10, 0x21]
+      - [0x67, 0x20, 0x40]
+      - [0x68, 0x90, 0x4C, 0x7C, 0x66]
+      - [0xB1, 0x0F, 0x02, 0x01]
+      - [0xB4, 0x01]
+      - [0xB5, 0x02, 0x02, 0x0A, 0x14]
+      - [0xB6, 0x04, 0x01, 0x9F, 0x00, 0x02]
+      - [0xDF, 0x11]
+      - [0xE2, 0x13, 0x00, 0x00, 0x30, 0x33, 0x3F]
+      - [0xE5, 0x3F, 0x33, 0x30, 0x00, 0x00, 0x13]
+      - [0xE1, 0x00, 0x57]
+      - [0xE4, 0x58, 0x00]
+      - [0xE0, 0x01, 0x03, 0x0D, 0x0E, 0x0E, 0x0C, 0x15, 0x19]
+      - [0xE3, 0x1A, 0x16, 0x0C, 0x0F, 0x0E, 0x0D, 0x02, 0x01]
+      - [0xE6, 0x00, 0xFF]
+      - [0xE7, 0x01, 0x04, 0x03, 0x03, 0x00, 0x12]
+      - [0xE8, 0x00, 0x70, 0x00]
+      - [0xEC, 0x52]
+      - [0xF1, 0x01, 0x01, 0x02]
+      - [0xF6, 0x09, 0x10, 0x00, 0x00]
+      - [0xFD, 0xFA, 0xFC]
+      - [0x35, 0x00]
+      - [0x11]
+      - delay 200ms
+      - [0x29]
+      - delay 10ms
+    pages: !include ../display_pages.yaml
