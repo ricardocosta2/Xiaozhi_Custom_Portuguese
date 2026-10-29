@@ -64,6 +64,17 @@ HA_Automations/              # Automações prontas (em português)
 **Nota 466x466:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 466x466 (Waveshare AMOLED 1.75), redimensionadas a partir das fontes 480x480.
 **Nota 128x64:** no OLED de 128x64 (MiniSpeaker096 e Breadboard Mini) só existem `Eyes` e `Eyes2`; o relógio usa o estilo "Small".
 
+### Resumo por dispositivo
+
+| Dispositivo | Ecrã | Modelos com imagens |
+|---|---|---|
+| Spotpear Ball v1/v2, Muma, EchoEar, Waveshare Audio Board, Xingzhi Cube 1.54 | 240x240 | Jarvis, Eyes, Mario, Prime, Steve, Brian, BumbleBee, Goku |
+| Breadboard DIY 2.4, ESP32-S3-BOX-3, Freenove 2.8, Lichuang S3 CAM | 240x320 / 320x240 | Jarvis, Eyes, Mario, Prime |
+| Waveshare 1.85C, Waveshare 1.85C v2, Guition Taichi Pi V1/V2 | 360x360 | Jarvis, Eyes, Mario, Prime |
+| Xingzhi Cube 1.83 2mic | 284x240 | Jarvis, Eyes, Mario, Prime |
+| Waveshare AMOLED 1.75 | 466x466 | Jarvis, Eyes, Mario, Prime |
+| MiniSpeaker096, Breadboard Mini | 128x64 (OLED) | Eyes, Eyes2 |
+
 ---
 
 ## 🚀 Guia de Início Rápido (Versão Modular — Recomendada)
