@@ -22,7 +22,8 @@ Devices/
     Freenove-2.8.yaml         # Freenove ESP32S3 2.8" (240x320)
     Lichuang_s3_cam.yaml      # Lichuang S3 CAM (240x320)
     Waveshare_Audio_Board.yaml# Waveshare Audio Board (240x240)
-    Waveshare_1.85C.yaml      # Waveshare 1.85C (360x360)
+    Waveshare_1.85C.yaml      # Waveshare 1.85C / 1.85C-BOX (360x360)
+    Waveshare_1.85C_v1-2.yaml # Waveshare 1.85C v2 / 1.85C-BOX v2 (360x360)
     Guition_Taichi_Pi_V1.yaml # Guition Taichi Pi V1 (360x360)
     Xingzhi_Cube_1.54.yaml    # Xiaozhi Cube 1.54 (240x240)
     Xingzhi_Cube_1.83_2mic.yaml # Xingzhi Cube 1.83 2mic (284x240)
@@ -50,7 +51,7 @@ HA_Automations/              # Automações prontas (em português)
 
 **Opções de `imagemodel`:** `Jarvis`, `Eyes`, `Mario`, `Prime`, `Steve`, `Brian`, `BumbleBee`, `Goku`
 **Nota 240x320:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 240x320. Nesses ecrãs, para usar os outros modelos muda `imageheight` para `"240"` (a imagem é esticada).
-**Nota 360x360:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 360x360 (Waveshare 1.85C e Guition Taichi Pi V1). Para os outros modelos, usa um dispositivo de 240x240.
+**Nota 360x360:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões nativas 360x360 (Waveshare 1.85C / 1.85C v2 e Guition Taichi Pi V1). Para os outros modelos, usa um dispositivo de 240x240.
 **Nota 284x240:** só `Jarvis`, `Eyes`, `Mario` e `Prime` têm versões 284x240 (Xingzhi 1.83 2mic), redimensionadas a partir das fontes 480x480.
 
 ---
@@ -145,6 +146,7 @@ Versão antiga em ficheiro único, sem bateria/touchscreen/relógios. Mantida ap
 - Lichuang S3 CAM
 - Waveshare Audio Board
 - Waveshare 1.85C
+- Waveshare 1.85C v2
 - Guition Taichi Pi V1
 - Xiaozhi Cube 1.54
 - Xingzhi Cube 1.83 2mic

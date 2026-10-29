@@ -116,6 +116,9 @@ touchscreen:
   - platform: cst816
     id: my_touchscreen
     interrupt_pin: GPIO4
+    reset_pin:
+      pca9554: pca9554a_device
+      number: 0
     display: main_display
     i2c_id: touchscreen_bus
 
@@ -182,6 +185,8 @@ touchscreen:
               case 270: ndx = -dy;  ndy =  dx; break;
               default: break;
             }
+            ndx = -ndx;
+            ndy = -ndy;
 
             const int absx = std::abs(ndx);
             const int absy = std::abs(ndy);
@@ -224,6 +229,30 @@ touchscreen:
 pca9554:
   - id: pca9554a_device
     address: 0x20
+
+# --- BATTERY ADC --------------------------------------------------------------
+sensor:
+  - platform: adc
+    pin: GPIO8
+    name: "Battery Voltage"
+    id: battery_voltage
+    attenuation: 12db
+    accuracy_decimals: 2
+    update_interval: 10s
+    unit_of_measurement: "V"
+    icon: mdi:battery-medium
+    filters:
+      - multiply: 3.0
+      - median:
+          window_size: 7
+          send_every: 7
+          send_first_at: 1
+      - throttle: 1min
+    on_value:
+      then:
+        - sensor.template.publish:
+            id: battery_percentage
+            state: !lambda 'return x;'
 
 # --- DISPLAY DRIVER (mipi_spi JC3636W518) -------------------------------------
 display:
