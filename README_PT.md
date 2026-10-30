@@ -53,6 +53,7 @@ images/
   Other/error-no-*.png       # Imagens de erro (sem HA / sem WiFi)
 sounds/                      # Sons de startup e notificações
 setup.ps1                    # Script de setup/validação/compilação local (Windows)
+tools/check_assets.py        # Verifica docs/imagens/wallpapers vs configs (usado na CI)
 MicroWakeWords/              # Documentação de wake words em português
 HA_Automations/              # Automações prontas (em português)
 ```
@@ -122,10 +123,12 @@ Gera `*.factory.bin` (flash inicial, partições) e `*.ota.bin` (atualização p
 Usa o script `setup.ps1` na raiz do repositório:
 ```powershell
 .\setup.ps1                          # cria venv + instala ESPHome (1ª vez)
+.\setup.ps1 -CheckAssets             # docs/imagens/wallpapers vs configs (rápido)
 .\setup.ps1 -Validate                # valida todos os configs (esphome config)
 .\setup.ps1 -Compile -Config "Devices/Modular/Ball v2.yaml"
 .\setup.ps1 -UpdateEsphome
 ```
+> O `-CheckAssets` (ou `python tools/check_assets.py`) confirma que todos os dispositivos estão nos dois READMEs e que existem as 9 imagens do modelo escolhido + o wallpaper da resolução. Corre automaticamente antes do `-Validate`; a CI também o faz.
 > ⚠️ **MAX_PATH do Windows:** se a compilação falhar com erros de caminho (`.esphome/build/...` muito longo), copia a pasta do repositório para um caminho curto (ex.: `C:\xz`) e corre de lá.
 
 ### Music Assistant (SENDSPIN)

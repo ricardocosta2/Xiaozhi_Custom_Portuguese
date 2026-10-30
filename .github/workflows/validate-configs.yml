@@ -4,14 +4,34 @@ on:
   push:
     paths:
       - "Devices/**"
+      - "images/**"
+      - "README*.md"
+      - "tools/**"
       - ".github/workflows/*.yml"
   pull_request:
     paths:
       - "Devices/**"
+      - "images/**"
+      - "README*.md"
+      - "tools/**"
       - ".github/workflows/*.yml"
   workflow_dispatch:
 
 jobs:
+  check-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check docs/assets sync
+        run: python tools/check_assets.py
+
   validate-configs:
     runs-on: ubuntu-latest
     steps:

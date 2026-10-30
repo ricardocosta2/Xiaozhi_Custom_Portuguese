@@ -1,6 +1,7 @@
 # XIAOZHI Custom Portuguese - Setup / Ferramentas locais
 # Uso:
 #   .\setup.ps1            # cria venv + instala ESPHome (primeira vez)
+#   .\setup.ps1 -CheckAssets # verifica docs/imagens/wallpapers vs configs
 #   .\setup.ps1 -Validate  # valida todos os YAMLs de Devices/Modular (esphome config)
 #   .\setup.ps1 -Validate -Config "Devices/Modular/Ball v2.yaml"
 #   .\setup.ps1 -Compile -Config "Devices/Modular/Ball v2.yaml"
@@ -12,6 +13,7 @@ param(
     [switch]$Validate,
     [switch]$Compile,
     [switch]$UpdateEsphome,
+    [switch]$CheckAssets,
     [string]$Config = ""
 )
 
@@ -65,7 +67,14 @@ function Get-ConfigList {
     return @(Get-ChildItem (Join-Path $RepoRoot "Devices\Modular") -Filter "*.yaml" | Where-Object { $_.Name -notlike "secrets*" } | ForEach-Object { "Devices\Modular\$($_.Name)" })
 }
 
+function Invoke-CheckAssets {
+    Write-Host "==> A verificar docs, imagens e wallpapers (tools/check_assets.py) ..."
+    & python (Join-Path $RepoRoot "tools\check_assets.py")
+    if ($LASTEXITCODE -ne 0) { throw "Assets/documentação em falta (ver erros acima)." }
+}
+
 function Invoke-Validate {
+    Invoke-CheckAssets
     $secrets = New-TempSecrets
     try {
         $failed = 0
@@ -105,6 +114,11 @@ if ($UpdateEsphome) {
     exit 0
 }
 
+if ($CheckAssets) {
+    Invoke-CheckAssets
+    exit 0
+}
+
 if (-not (Test-Path $Esphome)) {
     Ensure-Venv
     Install-Esphome
@@ -112,12 +126,14 @@ if (-not (Test-Path $Esphome)) {
     Ensure-Venv
 }
 
-if ($Validate) { Invoke-Validate }
+if ($CheckAssets) { Invoke-CheckAssets }
+elseif ($Validate) { Invoke-Validate }
 elseif ($Compile) { Invoke-Compile }
 else {
     Write-Host @"
 Setup local pronto.
 Comandos disponíveis:
+  .\setup.ps1 -CheckAssets                 verifica docs/imagens/wallpapers vs configs
   .\setup.ps1 -Validate                    valida todos os YAMLs modulares
   .\setup.ps1 -Validate -Config <yaml>     valida apenas um config
   .\setup.ps1 -Compile -Config <yaml>      compila firmware (gera .bin)
